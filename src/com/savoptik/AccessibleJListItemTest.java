@@ -1,5 +1,7 @@
 package com.savoptik;
 
+import javax.accessibility.Accessible;
+import javax.accessibility.AccessibleContext;
 import javax.swing.*;
 import javax.swing.event.ListDataListener;
 import java.awt.*;
@@ -48,5 +50,38 @@ public class AccessibleJListItemTest extends JList {
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(AccessibleJListItemTest::showTest);
+    }
+
+    @Override
+    public AccessibleContext getAccessibleContext() {
+        if (accessibleContext == null) {
+            accessibleContext = new AccessibleListTest();
+        }
+        return accessibleContext;
+    }
+
+
+    private class AccessibleListTest extends AccessibleJList {
+
+        @Override
+        public Accessible getAccessibleChild(int i) {
+            if (i >= getModel().getSize()) {
+                return null;
+            } else {
+                return new AccessibleItemTest(AccessibleJListItemTest.this, i);
+            }
+        }
+
+        private class AccessibleItemTest extends AccessibleJListChild {
+
+            AccessibleItemTest(JList parent, int indexInParent) {
+                super(parent, indexInParent);
+            }
+
+            @Override
+            public String getAccessibleName() {
+                return "This item " + super.getAccessibleName();
+            }
+        }
     }
 }
