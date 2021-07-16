@@ -1,0 +1,1 @@
+This project was created to test a11y lists on MAcOS when AccessibilityJListItem is overridden
